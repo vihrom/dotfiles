@@ -1,0 +1,29 @@
+icons_format = "{icon}"
+
+[theme]
+theme = "gruvbox-dark"
+#[theme.overrides]
+#idle_bg = "#123456"
+#idle_fg = "#abcdef"
+
+[icons]
+icons = "awesome4"
+[icons.overrides]
+bat = ["|E|", "|_|", "|=|", "|F|"]
+bat_charging = "|^| "
+
+[[block]]
+block = "keyboard_layout"
+driver = "xkbevent"
+format = " Layout: $layout "
+
+[[block]]
+block = "sound"
+[[block.click]]
+button = "left"
+cmd = "pavucontrol"
+
+[[block]]
+block = "time"
+interval = 5
+format = " $timestamp.datetime(f:'%a %d/%m %R') "

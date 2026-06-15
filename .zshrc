@@ -16,14 +16,19 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 
-
 setopt autocd
 setopt CORRECT
-
 
 alias ls='ls --color=auto'
 alias pacman-clean='pacman -Qtdq > /dev/null && sudo pacman -Rns $(pacman -Qtdq) || echo "No orphan packages found."'
 
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR="vim"
+export LIBVA_DRIVER_NAME=i965
+
+bindkey -e
+
+source <(fzf --zsh)
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -48,6 +53,10 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
+# Load powerlevel10k theme
+zinit ice depth"1" # git clone depth
+zinit light romkatv/powerlevel10k
+
 # Completions
 zstyle ':completion:*' menu select
 
@@ -55,16 +64,6 @@ zstyle ':completion:*' menu select
 zinit wait"0" lucid light-mode for zsh-users/zsh-completions
 zinit wait"0" lucid light-mode for zsh-users/zsh-autosuggestions
 zinit wait"0" lucid light-mode atload"zicompinit; zicdreplay" for zsh-users/zsh-syntax-highlighting
-
-
-
-# Load powerlevel10k theme
-zinit ice depth"1" # git clone depth
-zinit light romkatv/powerlevel10k
-
-
-export EDITOR="vim"
-bindkey -e
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

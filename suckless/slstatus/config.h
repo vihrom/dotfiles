@@ -67,6 +67,6 @@ static const char unknown_str[] = "n/a";
 static const struct arg args[] = {
 	/* function format          argument */
 	{ keymap,       "%s ",      NULL },
-	{ run_command, "%s%% ", "amixer get Master | awk -F'[][]' 'END{print $2}' | sed 's/%//'" },
+	{ run_command, "%s ", "amixer get Master | awk -F'[][]' 'END{print ($6==\"off\") ? \"MUTED\" : $2}'" },
 	{ datetime, "%s",           "%F %T" },
 };

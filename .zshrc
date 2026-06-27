@@ -34,13 +34,48 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# Fzy
+
+fzy-history-search() {
+  local rlines
+  
+  rlines=$(fc -l -n 1 | awk '{lines[NR]=$0} END {for (i=NR; i>0; i--) if (!seen[lines[i]]++) print lines[i]}')
+  
+  local selected
+  selected=$(echo "$rlines" | fzy --query="$BUFFER" 2>/dev/null)
+  
+  if [ -n "$selected" ]; then
+    BUFFER="$selected"
+    CURSOR=$#BUFFER
+  fi
+  
+  zle reset-prompt
+}
+zle -N fzy-history-search
+bindkey '^R' fzy-history-search
+
 # Theme
 setopt prompt_subst
 
 autoload -Uz vcs_info
 precmd() { vcs_info }
 
-zstyle ':vcs_info:git:*' formats 'on %F{magenta} %b%f'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '%F{yellow}*%f'
+zstyle ':vcs_info:*' stagedstr '%F{green}+%f'
+zstyle ':vcs_info:git:*' formats 'on %F{magenta} %b%u%c%f'
+
+zstyle ':vcs_info:git+post-backend:*' hooks git-post-backend-updown
+
++vi-git-post-backend-updown() {
+    git rev-parse @{upstream} >/dev/null 2>&1 || return 0
+    local -a x
+    x=( $(git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null) )
+    
+    (( x[1] )) && hook_com[branch]+="%F{green}↑%f"
+    (( x[2] )) && hook_com[branch]+="%F{red}↓%f"
+    return 0
+}
 
 PROMPT='
 %F{cyan}%~%f ${vcs_info_msg_0_}

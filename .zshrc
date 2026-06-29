@@ -15,7 +15,6 @@ setopt CORRECT
 
 # Alias
 alias ls='ls --color=auto'
-alias pacman-clean='pacman -Qtdq > /dev/null && sudo pacman -Rns $(pacman -Qtdq) || echo "No orphan packages found."'
 
 # Env
 export PATH="$HOME/.local/bin:$PATH"
@@ -80,3 +79,19 @@ zstyle ':vcs_info:git+post-backend:*' hooks git-post-backend-updown
 PROMPT='
 %F{cyan}%~%f ${vcs_info_msg_0_}
 %F{green}$%f '
+
+# Notes
+note() {
+    $EDITOR ~/notes/$(date +%Y-%m-%d)-${1:-untitled}.md
+}
+
+note-open() {
+    cd ~/notes && $EDITOR "$(find . -type f | sed 's|^\./||' | fzy)"
+}
+
+note-grep() {
+    local file
+    file=$(grep -rnwl ~/notes/ -e "$1" | sed "s|^$HOME/notes/||" | fzy)
+    [ -n "$file" ] && $EDITOR ~/notes/$file
+}
+

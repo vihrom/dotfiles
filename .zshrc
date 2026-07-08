@@ -34,14 +34,9 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # Fzy
-
 fzy-history-search() {
-  local rlines
-  
-  rlines=$(fc -l -n 1 | awk '{lines[NR]=$0} END {for (i=NR; i>0; i--) if (!seen[lines[i]]++) print lines[i]}')
-  
   local selected
-  selected=$(echo "$rlines" | fzy --query="$BUFFER" 2>/dev/null)
+  selected=$(fc -r -l -n 1 | awk '!seen[$0]++' | fzy --query="$BUFFER" 2>/dev/null)
   
   if [ -n "$selected" ]; then
     BUFFER="$selected"
@@ -79,19 +74,4 @@ zstyle ':vcs_info:git+post-backend:*' hooks git-post-backend-updown
 PROMPT='
 %F{cyan}%~%f ${vcs_info_msg_0_}
 %F{green}$%f '
-
-# Notes
-note() {
-    $EDITOR ~/notes/$(date +%Y-%m-%d)-${1:-untitled}.md
-}
-
-note-open() {
-    cd ~/notes && $EDITOR "$(find . -type f | sed 's|^\./||' | fzy)"
-}
-
-note-grep() {
-    local file
-    file=$(grep -rnwl ~/notes/ -e "$1" | sed "s|^$HOME/notes/||" | fzy)
-    [ -n "$file" ] && $EDITOR ~/notes/$file
-}
 

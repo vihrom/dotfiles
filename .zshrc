@@ -1,7 +1,7 @@
 # History
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=5000                 
-SAVEHIST=5000
+HISTSIZE=10000                 
+SAVEHIST=10000
 
 setopt EXTENDED_HISTORY          
 setopt HIST_IGNORE_ALL_DUPS 

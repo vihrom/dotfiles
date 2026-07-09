@@ -49,7 +49,6 @@ fzy-history-search() {
     BUFFER="$selected"
     CURSOR=$#BUFFER
   fi
-  
   zle reset-prompt
 }
 
@@ -65,7 +64,6 @@ fzy-file-widget() {
     if [ -n "$selected" ]; then
         LBUFFER="${LBUFFER}${(q)selected}"
     fi
-
     zle reset-prompt
 }
 
@@ -76,7 +74,7 @@ bindkey '^T' fzy-file-widget
 # Fzy Directory
 fzy-cd-widget() {
     local selected
-    selected=$(find . -mindepth 1 -not -path '*/.*' -type d 2> /dev/null | fzy)
+    selected=$(find . -mindepth 1 -type d 2> /dev/null | fzy)
     
     if [ -n "$selected" ]; then
         cd "$selected"

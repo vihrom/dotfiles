@@ -9,12 +9,15 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 
+
 # Options
 setopt autocd
 setopt CORRECT
 
+
 # Alias
 alias ls='ls --color=auto'
+
 
 # Env
 export PATH="$HOME/.local/bin:$PATH"
@@ -23,17 +26,21 @@ export LIBVA_DRIVER_NAME=i965
 
 bindkey -e
 
+
 # Completions 
 autoload -Uz compinit && compinit
 
+
 # Autosuggestions 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 
 # Interactive menu
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Fzy
+
+# Fzy History
 fzy-history-search() {
   local selected
   selected=$(fc -r -l -n 1 | awk '!seen[$0]++' | fzy --query="$BUFFER" 2>/dev/null)
@@ -45,8 +52,41 @@ fzy-history-search() {
   
   zle reset-prompt
 }
+
 zle -N fzy-history-search
 bindkey '^R' fzy-history-search
+
+
+# Fzy File
+fzy-file-widget() {
+    local selected
+    selected=$(find . -type f 2> /dev/null | fzy)
+
+    if [ -n "$selected" ]; then
+        LBUFFER="${LBUFFER}${(q)selected}"
+    fi
+
+    zle reset-prompt
+}
+
+zle -N fzy-file-widget
+bindkey '^T' fzy-file-widget
+
+
+# Fzy Directory
+fzy-cd-widget() {
+    local selected
+    selected=$(find . -mindepth 1 -not -path '*/.*' -type d 2> /dev/null | fzy)
+    
+    if [ -n "$selected" ]; then
+        cd "$selected"
+    fi
+    zle reset-prompt
+}
+
+zle -N fzy-cd-widget
+bindkey '^[c' fzy-cd-widget
+
 
 # Theme
 setopt prompt_subst
@@ -58,7 +98,6 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '%F{yellow}*%f'
 zstyle ':vcs_info:*' stagedstr '%F{green}+%f'
 zstyle ':vcs_info:git:*' formats 'on %F{magenta} %b%u%c%f'
-
 zstyle ':vcs_info:git+post-backend:*' hooks git-post-backend-updown
 
 +vi-git-post-backend-updown() {

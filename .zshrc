@@ -19,6 +19,7 @@ setopt CORRECT
 alias ls='ls --color=auto'
 alias c='clear'
 
+
 # Env
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="vim"

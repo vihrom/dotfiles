@@ -24,6 +24,9 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="vim"
 export LIBVA_DRIVER_NAME=i965
 
+export PLAN9=/usr/lib/plan9
+export PATH="$PATH:$PLAN9/bin"
+
 bindkey -e
 
 
@@ -40,50 +43,8 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 
-# Fzy History
-fzy-history-search() {
-  local selected
-  selected=$(fc -r -l -n 1 | awk '!seen[$0]++' | fzy --query="$BUFFER" 2>/dev/null)
-  
-  if [ -n "$selected" ]; then
-    BUFFER="$selected"
-    CURSOR=$#BUFFER
-  fi
-  zle reset-prompt
-}
-
-zle -N fzy-history-search
-bindkey '^R' fzy-history-search
-
-
-# Fzy File
-fzy-file-widget() {
-    local selected
-    selected=$(find . -type f 2> /dev/null | fzy)
-
-    if [ -n "$selected" ]; then
-        LBUFFER="${LBUFFER}${(q)selected}"
-    fi
-    zle reset-prompt
-}
-
-zle -N fzy-file-widget
-bindkey '^T' fzy-file-widget
-
-
-# Fzy Directory
-fzy-cd-widget() {
-    local selected
-    selected=$(find . -mindepth 1 -type d 2> /dev/null | fzy)
-    
-    if [ -n "$selected" ]; then
-        cd "$selected"
-    fi
-    zle reset-prompt
-}
-
-zle -N fzy-cd-widget
-bindkey '^[c' fzy-cd-widget
+# Fzf
+source <(fzf --zsh)
 
 
 # Theme

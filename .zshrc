@@ -17,15 +17,12 @@ setopt CORRECT
 
 # Alias
 alias ls='ls --color=auto'
-
+alias c='clear'
 
 # Env
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="vim"
 export LIBVA_DRIVER_NAME=i965
-
-export PLAN9=/usr/lib/plan9
-export PATH="$PATH:$PLAN9/bin"
 
 bindkey -e
 
@@ -72,4 +69,3 @@ zstyle ':vcs_info:git+post-backend:*' hooks git-post-backend-updown
 PROMPT='
 %F{cyan}%~%f ${vcs_info_msg_0_}
 %F{green}$%f '
-

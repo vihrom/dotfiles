@@ -1,6 +1,7 @@
 #!/bin/sh
 
 setxkbmap -layout "us,ru" -option "grp:alt_shift_toggle"
+setxkbmap -option "caps:escape"
 xkb-switch -W | while read -r _; do kill -45 $(pidof dwmblocks); done &
 
 #xssproxy &
@@ -11,4 +12,8 @@ xwallpaper --stretch ~/Pictures/Wallpapers/wallpaper.png &
 picom -b
 dwmblocks &
 
-exec dwm
+pipewire &
+
+xrdb -merge ~/.Xresources
+
+exec dbus-run-session -- dwm

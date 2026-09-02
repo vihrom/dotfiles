@@ -19,15 +19,15 @@ alias c='clear'
 
 # Env
 export PATH="$HOME/.local/bin:$PATH"
-export EDITOR="vim"
+export EDITOR="nvim"
 export LIBVA_DRIVER_NAME=i965
 bindkey -e
 
-# Completions 
-autoload -Uz compinit && compinit
+# Rust environment setup
+. "$HOME/.cargo/env"
 
-# Autosuggestions 
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Completions
+autoload -Uz compinit && compinit
 
 # Interactive menu
 zstyle ':completion:*' menu select

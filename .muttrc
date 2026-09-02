@@ -1,0 +1,25 @@
+set realname = "user"
+set from = "user@gmail.com"
+set use_from = yes
+
+set imap_user = "user@gmail.com"
+set imap_pass = `pass show mail`
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+INBOX"
+set postponed = "+[Gmail]/Drafts"
+set record = "+[Gmail]/Sent Mail"
+
+set smtp_url = "smtps://user%40gmail.com@smtp.gmail.com:465"
+set smtp_pass = `pass show mail`
+
+set header_cache = "~/.mutt/cache/headers"
+set message_cachedir = "~/.mutt/cache/bodies"
+set certificate_file = "~/.mutt/certificates"
+
+set sort = threads
+set sort_aux = reverse-last-date-received
+set mail_check = 60
+set timeout = 10
+set mailcap_path = ~/.mutt/mailcap
+auto_view text/html
+alternative_order text/plain text/enriched text/html

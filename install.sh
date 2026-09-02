@@ -24,7 +24,7 @@ for file in .*; do
 
     if [ -e "$dest_file" ] || [ -L "$dest_file" ]; then
         echo "File $file already exists in $TARGET_DIR. Creating a backup..."
-        
+
         mv "$dest_file" "${dest_file}.bak"
     fi
 

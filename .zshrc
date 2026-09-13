@@ -23,9 +23,6 @@ export EDITOR="nvim"
 export LIBVA_DRIVER_NAME=i965
 bindkey -e
 
-# Rust environment setup
-. "$HOME/.cargo/env"
-
 # Completions
 autoload -Uz compinit && compinit
 

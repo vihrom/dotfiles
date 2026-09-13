@@ -1,4 +1,4 @@
 Just my dotfiles 。.:☆*:･'(*⌒―⌒*)))
 
-Also text editors configs:
-[Neovim](https://github.com/vihrom/nvim) | [Emacs](https://github.com/vihrom/.emacs.d)
+Also Emacs config:
+[Emacs](https://github.com/vihrom/.emacs.d)

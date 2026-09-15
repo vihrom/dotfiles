@@ -1,9 +1,9 @@
-local runner = require("utils/runner")
-
 -- Basic
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { silent = true })
+
+-- Mini.files
 vim.keymap.set("n", "<leader>e", function()
 	require("mini.files").open()
 end, { desc = "Explorer" })
@@ -20,8 +20,12 @@ vim.keymap.set("n", "<leader>fb", "<cmd>Pick buffers<CR>", { desc = "Find open b
 vim.keymap.set("n", "<leader>fh", "<cmd>Pick help<CR>", { desc = "Find help tags" })
 vim.keymap.set("n", "<leader>fo", "<cmd>Pick oldfiles<CR>", { desc = "Oldfiles picker" })
 
--- Code
-vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP Code Action" })
-
--- Mode
-vim.keymap.set("n", "<Leader>mr", runner.run_current_file, { desc = "Run current file" })
+-- LSP
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		local opts = { buffer = ev.buf, silent = true }
+		opts.desc = "LSP Code Action"
+		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+	end,
+})

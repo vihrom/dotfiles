@@ -19,3 +19,12 @@ local config = {
 }
 
 vim.lsp.config("lua_ls", config)
+vim.lsp.inlay_hint.enable(true)
+vim.lsp.log.set_level(vim.lsp.log.levels.OFF)
+
+vim.lsp.enable({
+	"gopls",
+	"lua_ls",
+	"clangd",
+	"rust_analyzer",
+})

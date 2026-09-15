@@ -1,26 +1,20 @@
 vim.pack.add({ "https://github.com/nvim-mini/mini.nvim" })
 
-require("mini.files").setup()
+require("mini.completion").setup()
 require("mini.ai").setup()
 require("mini.surround").setup()
 require("mini.comment").setup()
-require("mini.completion").setup()
 require("mini.pairs").setup()
-require("mini.git").setup()
-require("mini.pick").setup()
-require("mini.bracketed").setup()
-
-require("mini.icons").setup()
 require("mini.notify").setup()
-require("mini.statusline").setup()
-require("mini.diff").setup()
-require("mini.trailspace").setup()
-require("mini.cursorword").setup()
+require('mini.trailspace').setup()
 
-require("mini.misc").setup()
-require("mini.extra").setup()
-require("mini.misc").setup_auto_root()
-require("mini.visits").setup()
+require("mini.pick").setup()
+require("mini.icons").setup()
+require("mini.files").setup()
+
+require("mini.diff").setup()
+require("mini.git").setup()
+
 local miniclue = require("mini.clue")
 miniclue.setup({
 	triggers = {
@@ -63,10 +57,8 @@ miniclue.setup({
 		miniclue.gen_clues.z(),
 
 		{ mode = "n", keys = "<Leader>f", desc = "+Find" },
-		{ mode = "n", keys = "<Leader>o", desc = "+Org" },
 		{ mode = "n", keys = "<Leader>d", desc = "+Diagnostics" },
 		{ mode = "n", keys = "<Leader>c", desc = "+Code" },
-		{ mode = "n", keys = "<Leader>m", desc = "+Mode" },
 	},
 	window = {
 		config = {

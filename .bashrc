@@ -9,6 +9,9 @@ export HISTCONTROL=ignoreboth:erasedups
 export HISTSIZE=10000
 export HISTFILESIZE=10000
 shopt -s histappend
+if [[ ! "$PROMPT_COMMAND" =~ "history -a" ]]; then
+    PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+fi
 
 # Exports
 export EDITOR='vis'

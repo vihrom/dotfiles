@@ -10,7 +10,6 @@ vim.opt.wrap = false
 -- Tabs & Indentation
 opt.number = true
 opt.relativenumber = true
-opt.expandtab = true
 opt.autoindent = true
 
 -- Search
@@ -39,7 +38,6 @@ if vim.fn.isdirectory(undo_dir) == 0 then
 end
 opt.undodir = undo_dir
 
-
 -- Set 2 spaces indentation specifically for Lua files
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "lua",
@@ -49,7 +47,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.expandtab = true
 	end,
 })
-
 
 -- Diagnostics
 vim.api.nvim_create_autocmd("CursorHold", {

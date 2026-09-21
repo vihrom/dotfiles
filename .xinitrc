@@ -1,6 +1,7 @@
 #!/bin/sh
 
-setxkbmap -layout "us,ru" -option "grp:alt_shift_toggle"
+export PATH="$HOME/.local/bin:$PATH"
+
 setxkbmap -option "caps:escape"
 
 xrdb -merge ~/.Xresources

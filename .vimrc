@@ -7,6 +7,8 @@ set number
 set relativenumber
 set clipboard=unnamedplus
 set laststatus=2
+set nowrap
+set ttimeoutlen=50
 
 " Search
 set hlsearch
@@ -29,6 +31,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'vim-airline/vim-airline'
+Plug 'powerman/vim-plugin-ruscmd'
 
 " LSP
 Plug 'prabirshrestha/vim-lsp'
@@ -76,3 +79,10 @@ xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+" Netrw navigation with h-l
+augroup NetrwNavigation
+  au!
+  autocmd FileType netrw nmap <buffer> l <CR>
+  autocmd FileType netrw nmap <buffer> h -
+augroup END

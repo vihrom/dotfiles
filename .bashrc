@@ -15,6 +15,7 @@ fi
 # Env
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR='vim'
+
 export NNN_PLUG='p:preview-tui;m:nmount;'
 export NNN_FIFO=/tmp/nnn.fifo
 export NNN_PREVIEWIMGPROG=ueberzug

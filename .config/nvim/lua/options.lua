@@ -1,36 +1,36 @@
-local opt = vim.opt
+local opt          = vim.opt
 -- Create an autocmd group to prevent duplicate entries when sourcing the config
-local augroup = vim.api.nvim_create_augroup("VimOptions", { clear = true })
+local augroup      = vim.api.nvim_create_augroup("VimOptions", { clear = true })
 
 -- UI
 vim.cmd.colorscheme("retrobox")
-opt.termguicolors = true
-vim.opt.wrap = false
+opt.termguicolors  = true
+vim.opt.wrap       = false
 
 -- Tabs & Indentation
-opt.number = true
+opt.number         = true
 opt.relativenumber = true
-opt.autoindent = true
+opt.autoindent     = true
 
 -- Search
-opt.ignorecase = true
-opt.smartcase = true
-opt.hlsearch = true
+opt.ignorecase     = true
+opt.smartcase      = true
+opt.hlsearch       = true
 
 -- System Integration
-opt.clipboard = "unnamedplus"
-opt.mouse = "a"
+opt.clipboard      = "unnamedplus"
+opt.mouse          = "a"
 
 -- Folds
-opt.foldmethod = "expr"
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-opt.foldlevel = 99
+opt.foldmethod     = "expr"
+opt.foldexpr       = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel      = 99
 
 -- Misc
-vim.o.updatetime = 300
+vim.o.updatetime   = 300
 
 -- Undo
-opt.undofile = true
+opt.undofile       = true
 
 local undo_dir = vim.fn.stdpath("data") .. "/undo"
 if vim.fn.isdirectory(undo_dir) == 0 then

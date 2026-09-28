@@ -32,6 +32,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'vim-airline/vim-airline'
 Plug 'powerman/vim-plugin-ruscmd'
+Plug 'airblade/vim-gitgutter'
 
 " LSP
 Plug 'prabirshrestha/vim-lsp'

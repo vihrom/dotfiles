@@ -5,7 +5,7 @@ xkb-switch -W | while read -r _; do kill -45 $(pidof dwmblocks); done &
 xset s 600 600 &
 xss-lock --transfer-sleep-lock -- slock &
 
-xwallpaper --stretch ~/Pictures/Wallpapers/wallpaper.jpg &
+xwallpaper --stretch ~/pics/wallpapers/wallpaper.jpg &
 picom -b
 
 pipewire &

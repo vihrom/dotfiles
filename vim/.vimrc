@@ -1,27 +1,19 @@
-" Set Space as the leader key
-let mapleader = " "
+vim9script
 
-" General settings
+# General
+g:mapleader = " "
 syntax on
-set number
-set relativenumber
-set clipboard=unnamedplus
-set laststatus=2
-set nowrap
-set ttimeoutlen=50
+set number relativenumber clipboard=unnamedplus laststatus=2 nowrap ttimeoutlen=50 autochdir updatetime=250 signcolumn=yes
 
-" Search
-set hlsearch
-set incsearch
-nnoremap <ESC><ESC> :noh<CR>
+# Search
+set hlsearch incsearch
+nnoremap <ESC><ESC> <cmd>noh<CR>
 
-" Undo history
-set undofile
-set undodir=~/.vim/undo
+# Undo
+set undofile undodir=~/.vim/undo
 
-" Plugins
-call plug#begin()
-
+# Plugins
+legacy call plug#begin()
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -33,57 +25,52 @@ Plug 'junegunn/vim-easy-align'
 Plug 'vim-airline/vim-airline'
 Plug 'powerman/vim-plugin-ruscmd'
 Plug 'airblade/vim-gitgutter'
+Plug 'yegappan/lsp'
+Plug 'morhetz/gruvbox'
+legacy call plug#end()
 
-" LSP
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
-call plug#end()
-
-" LSP keybindings and functions
-function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    nmap <buffer> gd <plug>(lsp-definition)
-    nmap <buffer> gr <plug>(lsp-references)
-    nmap <buffer> gi <plug>(lsp-implementation)
-    nmap <buffer> <f2> <plug>(lsp-rename)
-    nmap <buffer> K <plug>(lsp-hover)
-    
-    " Diagnostic navigation ([d and ]d)
-    nmap <buffer> [d <plug>(lsp-previous-diagnostic)
-    nmap <buffer> ]d <plug>(lsp-next-diagnostic)
-    
-    " Code Actions (Space + a)
-    nmap <buffer> <leader>a <plug>(lsp-code-action)
-
-    " Show errors for current file (Space + q)
-    nmap <buffer> <leader>q :LspDocumentDiagnostics<CR>
-endfunction
-
-augroup lsp_install
-    au!
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
-
-" Airline settings
-let g:airline_powerline_fonts = 1
-
-" FZF keybindings
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fg :Rg<CR>
-nnoremap <leader>fb :Buffers<CR>
-
-" Start interactive EasyAlign in visual mode (e.g. vipga)
+# Plugin Settings & Maps
+g:airline_powerline_fonts = 1
+nnoremap <leader>ff <cmd>Files<CR>
+nnoremap <leader>fg <cmd>Rg<CR>
+nnoremap <leader>fb <cmd>Buffers<CR>
 xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" Netrw navigation with h-l
-augroup NetrwNavigation
-  au!
-  autocmd FileType netrw nmap <buffer> l <CR>
-  autocmd FileType netrw nmap <buffer> h -
+# True Color Support & Colorscheme
+set termguicolors
+set background=dark
+colorscheme gruvbox
+
+# LSP Config & Servers Registration
+def LspInit()
+    g:LspOptionsSet({
+        showDiagWithVirtualText: true,
+        completionMatcher: 'fuzzy'
+    })
+
+    var servers = [
+        {name: 'clangd', filetype: ['c', 'cpp'], path: 'clangd', args: []},
+        {name: 'gopls', filetype: ['go'], path: 'gopls', args: []}
+    ]
+    g:LspAddServer(servers)
+enddef
+
+def LspMappings()
+    setlocal omnifunc=lsp#complete
+    nnoremap <buffer> gd <cmd>LspGotoDefinition<CR>
+    nnoremap <buffer> gr <cmd>LspShowReferences<CR>
+    nnoremap <buffer> gi <cmd>LspGotoImpl<CR>
+    nnoremap <buffer> <f2> <cmd>LspRename<CR>
+    nnoremap <buffer> K <cmd>LspHover<CR>
+    nnoremap <buffer> [d <cmd>LspDiag prev<CR>
+    nnoremap <buffer> ]d <cmd>LspDiag next<CR>
+    nnoremap <buffer> <leader>a <cmd>LspCodeAction<CR>
+    nnoremap <buffer> <leader>q <cmd>LspDiag show<CR>
+enddef
+
+augroup Vim9Lsp
+    autocmd!
+    autocmd User LspSetup LspInit()
+    autocmd User LspAttached LspMappings()
 augroup END

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# The commit message file is passed as the first argument
+commit_msg_file="$1"
+
+# Read only the very first line of the commit message (the header)
+read -r first_line < "$commit_msg_file"
+
+# Matches: type(scope): description OR type: description
+# Optional breaking change matches: type(scope)!: description OR type!: description
+pattern="^(feat|fix|chore|docs|style|refactor|test|ci)(\([a-z0-9_-]+\))?!?: .+"
+
+# Validate the first line directly without spawning extra shell variables
+if ! echo "$first_line" | grep -Eq "$pattern"; then
+    echo "Error: Commit message does not match the Conventional Commits standard!"
+    echo "Format:  <type>(<scope>): <description>  OR  <type>: <description>"
+    echo "Allowed: feat, fix, chore, docs, style, refactor, test, ci"
+    echo "Example: feat(zsh): add alias"
+    exit 1
+fi

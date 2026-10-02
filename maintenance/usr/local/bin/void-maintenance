@@ -2,52 +2,56 @@
 # Void Linux System Maintenance: Upgrade & Clean
 
 LOG_FILE="/var/log/void-maintenance.log"
-USER_HOME="/home/vihrom"
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] STARTING WEEKLY SYSTEM MAINTENANCE" >> "$LOG_FILE"
+# Set strict safe PATH for system utilities
+export PATH="/usr/bin:/usr/sbin:/bin:/sbin"
 
-# Measure disk space before maintenance (in KB)
-SPACE_BEFORE=$(df / | awk 'NR==2 {print $4}')
+# Log helper to capture current timestamp without spawning multiple date forks
+log_task() {
+	printf "[%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$1" >> "$LOG_FILE"
+}
+
+log_task "STARTING WEEKLY SYSTEM MAINTENANCE"
+
+# Measure disk space using portable POSIX format (-P) to ensure 4th column is always Available space
+SPACE_BEFORE=$(df -P / | awk 'NR==2 {print $4}')
 TMP_UPGRADE_LOG=$(mktemp)
 
-# 1. SYSTEM UPGRADE
+# 1. System Upgrade
 echo "  [XBPS] Syncing repositories and upgrading packages..." >> "$LOG_FILE"
-if /usr/bin/xbps-install -Suy > "$TMP_UPGRADE_LOG" 2>&1; then
-    if grep -E "(install|upgrade|remove)" "$TMP_UPGRADE_LOG" > /dev/null; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] SUCCESS: System upgrade completed. Packages updated:" >> "$LOG_FILE"
-        grep -E "(configured|installed|unpacked)" "$TMP_UPGRADE_LOG" >> "$LOG_FILE"
-    else
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] SUCCESS: System upgrade completed. No new updates available." >> "$LOG_FILE"
-    fi
+if xbps-install -Suy > "$TMP_UPGRADE_LOG" 2>&1; then
+	if grep -Eq "configured|installed|unpacked" "$TMP_UPGRADE_LOG"; then
+		log_task "SUCCESS: System upgrade completed. Packages updated:"
+		grep -E "configured|installed|unpacked" "$TMP_UPGRADE_LOG" >> "$LOG_FILE"
+	else
+		log_task "SUCCESS: System upgrade completed. No new updates available."
+	fi
 else
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Error occurred during system upgrade." >> "$LOG_FILE"
-    cat "$TMP_UPGRADE_LOG" >> "$LOG_FILE"
+	log_task "ERROR: Error occurred during system upgrade."
+	cat "$TMP_UPGRADE_LOG" >> "$LOG_FILE"
 fi
 rm -f "$TMP_UPGRADE_LOG"
 
-# 2. CLEAN OLD PACKAGES & ORPHANS
+# 2. Clean old packages and orphans
 echo "  [XBPS] Removing obsolete cached packages and orphans..." >> "$LOG_FILE"
-if /usr/bin/xbps-remove -Ooy >> "$LOG_FILE" 2>&1; then
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] SUCCESS: XBPS cache and orphans cleared." >> "$LOG_FILE"
+if xbps-remove -Ooy >> "$LOG_FILE" 2>&1; then
+	log_task "SUCCESS: XBPS cache and orphans cleared."
 else
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Error occurred during XBPS cleanup." >> "$LOG_FILE"
+	log_task "ERROR: Error occurred during XBPS cleanup."
 fi
 
-# 3. CLEAN OLD KERNELS
+# 3. Clean old kernels
 echo "  [KERNEL] Purging unused Linux kernels..." >> "$LOG_FILE"
-if /usr/bin/vkpurge rm all >> "$LOG_FILE" 2>&1; then
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] SUCCESS: Old kernels purged." >> "$LOG_FILE"
+if vkpurge rm all >> "$LOG_FILE" 2>&1; then
+	log_task "SUCCESS: Old kernels purged."
 else
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Error occurred during kernel purge." >> "$LOG_FILE"
+	log_task "ERROR: Error occurred during kernel purge."
 fi
-
-# Measure disk space after maintenance
-SPACE_AFTER=$(df / | awk 'NR==2 {print $4}')
 
 # Calculate total space saved
-FREED_KB=$((SPACE_AFTER - SPACE_BEFORE))
-FREED_MB=$((FREED_KB / 1024))
+SPACE_AFTER=$(df -P / | awk 'NR==2 {print $4}')
+FREED_MB=$(( (SPACE_AFTER - SPACE_BEFORE) / 1024 ))
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Maintenance tasks finished!" >> "$LOG_FILE"
-echo "SUMMARY: Disk space delta: ${FREED_MB} MB." >> "$LOG_FILE"
+log_task "Maintenance tasks finished!"
+printf "SUMMARY: Disk space delta: %d MB.\n" "$FREED_MB" >> "$LOG_FILE"
 echo "--------------------------------------------------" >> "$LOG_FILE"

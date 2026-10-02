@@ -1,0 +1,126 @@
+#!/bin/bash
+
+# Parse flags
+DRY_RUN=false
+if [ "$1" = "--dry-run" ] || [ "$1" = "-d" ]; then
+    DRY_RUN=true
+    echo "--- DRY RUN MODE (No changes will be saved) ---"
+fi
+
+# 1. Get the latest tag (if no tags found, default to HEAD and version 0.0.0)
+last_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+if [ -z "$last_tag" ]; then
+    log_range="HEAD"
+    current_version="0.0.0"
+else
+    log_range="$last_tag..HEAD"
+    current_version=${last_tag#v} # remove 'v' prefix
+fi
+
+# Split current version into components
+IFS='.' read -r major minor patch <<< "$current_version"
+
+# 2. Analyze commits since the last tag to determine the version bump
+commits=$(git log "$log_range" --format="%s" 2>/dev/null)
+
+bump="none"
+while IFS= read -r line; do
+    if [[ "$line" =~ BREAKING[[:space:]]CHANGE || "$line" == *"!"* ]]; then 
+        bump="major"
+        break
+    fi
+    if [[ "$line" =~ ^feat ]]; then 
+        [[ "$bump" != "major" ]] && bump="minor"
+    elif [[ "$line" =~ ^fix ]]; then 
+        [[ "$bump" == "none" ]] && bump="patch"
+    fi
+done <<< "$commits"
+
+# If no changes warrant a version bump
+if [ "$bump" == "none" ]; then
+    echo "No feat or fix commits found. Skipping version bump."
+    exit 0
+fi
+
+# 3. Calculate the new version
+if [ "$bump" == "major" ]; then major=$((major + 1)); minor=0; patch=0; fi
+if [ "$bump" == "minor" ]; then minor=$((minor + 1)); patch=0; fi
+if [ "$bump" == "patch" ]; then patch=$((patch + 1)); fi
+
+new_version="v$major.$minor.$patch"
+echo "New version: $new_version (determined by commits as: $bump)"
+
+# 4. Generate CHANGELOG in memory
+changelog_tmp=$(mktemp)
+
+# Bypassed 'echo -e' with standard, highly portable POSIX printf
+printf "## %s (%s)\n\n" "$new_version" "$(date +%Y-%m-%d)" > "$changelog_tmp"
+
+generate_section() {
+    local type_pattern="$1"
+    local section_title="$2"
+    
+    local raw_commits
+    raw_commits=$(git log "$log_range" --format="%s (%h)" 2>/dev/null | grep -E "^$type_pattern")
+    
+    if [ -n "$raw_commits" ]; then
+        echo "### $section_title" >> "$changelog_tmp"
+        
+        # Format via awk using variables to completely avoid quote escaping issues
+        echo "$raw_commits" | sort -t'(' -k2 | awk -v def_scope="general" '
+        {
+            if ($0 ~ /^[a-z]+\([^)]+\):/) {
+                open_p = index($0, "(")
+                close_p = index($0, ")")
+                colon = index($0, ":")
+                
+                scope = substr($0, open_p + 1, close_p - open_p - 1)
+                msg = substr($0, colon + 2)
+            } else {
+                colon = index($0, ":")
+                scope = def_scope
+                msg = substr($0, colon + 2)
+            }
+            
+            if (scope != current_scope) {
+                current_scope = scope
+                print "  #### " current_scope
+            }
+            print "  * " msg
+        }' >> "$changelog_tmp"
+        echo "" >> "$changelog_tmp"
+    fi
+}
+
+# Run generation for each semantic category
+generate_section "feat" "Features"
+generate_section "fix" "Bug Fixes"
+generate_section "refactor" "Code Refactoring"
+generate_section "docs" "Documentation"
+generate_section "style" "Styles & Formatting"
+generate_section "test" "Tests"
+generate_section "ci" "Continuous Integration (CI)"
+generate_section "chore" "Chores & Maintenance"
+
+# 5. Output handling based on mode
+if [ "$DRY_RUN" = true ]; then
+    printf "\n--- GENERATED CHANGELOG OUTPUT ---\n"
+    cat "$changelog_tmp"
+    rm "$changelog_tmp"
+    printf "----------------------------------\n"
+    echo "Dry run finished. No files modified, no tags created."
+    exit 0
+fi
+
+# Apply changes permanently if not in dry-run
+if [ -f CHANGELOG.md ]; then
+    cat CHANGELOG.md >> "$changelog_tmp"
+fi
+mv "$changelog_tmp" CHANGELOG.md
+
+# 6. Git release routine
+git add CHANGELOG.md
+git commit -m "chore: release $new_version"
+git tag -a "$new_version" -m "Release $new_version"
+
+echo "Release $new_version successfully created locally! Run 'git push --tags' to publish."

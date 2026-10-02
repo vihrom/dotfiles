@@ -27,10 +27,14 @@ Plug 'powerman/vim-plugin-ruscmd'
 Plug 'airblade/vim-gitgutter'
 Plug 'yegappan/lsp'
 Plug 'morhetz/gruvbox'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'editorconfig/editorconfig-vim'
 legacy call plug#end()
 
 # Plugin Settings & Maps
 g:airline_powerline_fonts = 1
+g:airline#extensions#whitespace#enabled = 0
+g:better_whitespace_enabled = 0
 nnoremap <leader>ff <cmd>Files<CR>
 nnoremap <leader>fg <cmd>Rg<CR>
 nnoremap <leader>fb <cmd>Buffers<CR>
@@ -50,8 +54,10 @@ def LspInit()
     })
 
     var servers = [
-        {name: 'clangd', filetype: ['c', 'cpp'], path: 'clangd', args: []},
-        {name: 'gopls', filetype: ['go'], path: 'gopls', args: []}
+        {name: 'clangd', filetype: ['c', 'cpp'], path: 'clangd', args: ['--background-index', '--clang-tidy']},
+        {name: 'gopls', filetype: ['go'], path: 'gopls', args: ['serve'], syncInit: true},
+        {name: 'pyright', filetype: ['python'], path: 'pyright-langserver', args: ['--stdio']},
+        {name: 'ruff', filetype: ['python'], path: 'ruff', args: ['server']}
     ]
     g:LspAddServer(servers)
 enddef

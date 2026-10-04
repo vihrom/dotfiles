@@ -1,9 +1,13 @@
-.PHONY: deploy install stow undeploy uninstall unlink
+.PHONY: install root-install uninstall
 
-MODULES = bash dwm mutt nvim picom tmux vim vis xorg zsh
+ROOT_MODULES = maintenance xorg-system
+MODULES      = bash dwm mutt picom tmux vim xorg zsh scripts git user-dirs
 
-deploy install stow:
+install:
 	stow -v $(MODULES)
 
-undeploy uninstall unlink:
+root-install:
+	stow -v $(ROOT_MODULES) -t /
+
+uninstall:
 	stow -v -D $(MODULES)

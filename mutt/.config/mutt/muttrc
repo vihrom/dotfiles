@@ -17,6 +17,9 @@ set mailcap_path     = "~/.config/mutt/mailcap"
 auto_view text/html
 alternative_order text/plain text/enriched text/html
 
+macro index \cb "<pipe-message>urlscan<Enter>" "call urlscan"
+macro pager \cb "<pipe-message>urlscan<Enter>" "call urlscan"
+
 
 source ~/.config/mutt/.mutt-secrets
 # set from      = "user@gmail.com"

@@ -1,6 +1,6 @@
 .PHONY: install root-install uninstall
 
-ROOT_MODULES = maintenance xorg-system
+ROOT_MODULES = maintenance xorg-system nftables
 MODULES      = bash dwm mutt picom tmux vim xorg zsh scripts git user-dirs
 
 install:

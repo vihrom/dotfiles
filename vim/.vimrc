@@ -3,7 +3,16 @@ vim9script
 # General
 g:mapleader = " "
 syntax on
-set number relativenumber clipboard=unnamedplus laststatus=2 nowrap ttimeoutlen=50 autochdir updatetime=250 signcolumn=yes
+set number
+  \ relativenumber
+  \ clipboard=unnamedplus
+  \ laststatus=2
+  \ nowrap
+  \ ttimeoutlen=50
+  \ autochdir
+  \ updatetime=250
+  \ signcolumn=yes
+  \ lazyredraw
 
 # Search
 set hlsearch incsearch

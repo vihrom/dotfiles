@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+FILENAME="${1:-screen_mic_$(date +%Y%m%d_%H%M%S).mp4}"
+MIC="alsa_input.usb-Generalplus_Usb_Audio_Device-00.mono-fallback"
+
+ffmpeg -f x11grab -video_size 1366x768 -framerate 30 -i :0.0 \
+  -f pulse -i "$MIC" \
+  -c:v libx264 -preset ultrafast -crf 23 -c:a aac "$FILENAME"

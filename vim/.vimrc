@@ -64,7 +64,7 @@ nmap ga <Plug>(EasyAlign)
 # True Color Support & Colorscheme
 set termguicolors
 set background=dark
-colorscheme gruvbox
+colorscheme retrobox
 
 # LSP Config & Servers Registration
 def LspInit()

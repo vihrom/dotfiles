@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+FILENAME="${1:-screen_$(date +%Y%m%d_%H%M%S).mp4}"
+
+ffmpeg -f x11grab -video_size 1366x768 -framerate 30 -i :0.0 \
+  -c:v libx264 -preset ultrafast -crf 23 "$FILENAME"

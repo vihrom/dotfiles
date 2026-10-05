@@ -24,8 +24,17 @@ if !isdirectory(expand('~/.vim/undo'))
 endif
 set undofile undodir=~/.vim/undo
 
+# Auto-install vim-plug
+var data_dir = '~/.vim'
+if empty(glob(data_dir .. '/autoload/plug.vim'))
+    silent execute '!curl -fLo ' .. data_dir .. '/autoload/plug.vim --create-dirs '
+        \ .. 'https://raw.githubusercontent.com/'
+        \ .. 'junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 # Plugins
-legacy call plug#begin()
+vim9cmd plug#begin()
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -38,10 +47,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'powerman/vim-plugin-ruscmd'
 Plug 'airblade/vim-gitgutter'
 Plug 'yegappan/lsp'
-Plug 'morhetz/gruvbox'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'editorconfig/editorconfig-vim'
-legacy call plug#end()
+vim9cmd plug#end()
 
 # Plugin Settings & Maps
 g:airline_powerline_fonts = 1

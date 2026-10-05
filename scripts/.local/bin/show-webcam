@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+CAM="/dev/video0"
+
+mpv av://v4l2:"$CAM" \
+  --profile=low-latency \
+  --untimed \
+  --border=no \
+  --ontop \
+  --autofit=320x240 \
+  --geometry=100%:100% \
+  --title="Webcam-PIP"

@@ -15,7 +15,7 @@ set number
   \ lazyredraw
 
 # Search
-set hlsearch incsearch
+set hlsearch incsearch ignorecase smartcase
 nnoremap <ESC><ESC> <cmd>noh<CR>
 
 # Undo

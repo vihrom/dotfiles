@@ -19,6 +19,9 @@ set hlsearch incsearch ignorecase smartcase
 nnoremap <ESC><ESC> <cmd>noh<CR>
 
 # Undo
+if !isdirectory(expand('~/.vim/undo'))
+    mkdir(expand('~/.vim/undo'), 'p')
+endif
 set undofile undodir=~/.vim/undo
 
 # Plugins

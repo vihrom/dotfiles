@@ -3,7 +3,6 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
 
-setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
@@ -28,6 +27,7 @@ setopt CORRECT
 # Aliases
 alias ls='ls --color=auto'
 alias g='git'
+alias gst='git status'
 alias c='clear'
 alias d='dirs -v'
 alias b='cd -'
@@ -39,7 +39,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="vim"
 export LIBVA_DRIVER_NAME=i965
 
-export NNN_PLUG='p:preview-tui;m:nmount;'
+export NNN_PLUG='p:preview-tui;m:nmount;i:imgview;'
 export NNN_FIFO=/tmp/nnn.fifo
 export NNN_PREVIEWIMGPROG=ueberzug
 export NNN_TERMINAL=st

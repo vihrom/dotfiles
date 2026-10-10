@@ -48,9 +48,10 @@ Plug 'powerman/vim-plugin-ruscmd'
 Plug 'airblade/vim-gitgutter'
 Plug 'yegappan/lsp'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'editorconfig/editorconfig-vim'
+Plug 'morhetz/gruvbox'
 vim9cmd plug#end()
 
+packadd! editorconfig
 # Plugin Settings & Maps
 g:airline_powerline_fonts = 1
 g:airline#extensions#whitespace#enabled = 0
@@ -64,7 +65,7 @@ nmap ga <Plug>(EasyAlign)
 # True Color Support & Colorscheme
 set termguicolors
 set background=dark
-colorscheme retrobox
+colorscheme gruvbox
 
 # LSP Config & Servers Registration
 def LspInit()

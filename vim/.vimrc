@@ -9,7 +9,6 @@ set number
   \ laststatus=2
   \ nowrap
   \ ttimeoutlen=50
-  \ autochdir
   \ updatetime=250
   \ signcolumn=yes
   \ lazyredraw
@@ -52,6 +51,7 @@ Plug 'morhetz/gruvbox'
 vim9cmd plug#end()
 
 packadd! editorconfig
+
 # Plugin Settings & Maps
 g:airline_powerline_fonts = 1
 g:airline#extensions#whitespace#enabled = 0
@@ -78,7 +78,6 @@ def LspInit()
         {name: 'clangd', filetype: ['c', 'cpp'], path: 'clangd', args: ['--background-index', '--clang-tidy']},
         {name: 'gopls', filetype: ['go'], path: 'gopls', args: ['serve'], syncInit: true},
         {name: 'pyright', filetype: ['python'], path: 'pyright-langserver', args: ['--stdio']},
-        {name: 'ruff', filetype: ['python'], path: 'ruff', args: ['server']}
     ]
     g:LspAddServer(servers)
 enddef

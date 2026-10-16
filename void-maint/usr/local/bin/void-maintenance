@@ -1,5 +1,11 @@
 #!/bin/sh
 # Void Linux System Maintenance: Upgrade & Clean
+LOCKFILE="/var/run/void-maintenance.lock"
+exec 9> "$LOCKFILE"
+if ! flock -n 9; then
+    echo "Maintenance is already running. Exiting."
+    exit 0
+fi
 
 LOG_FILE="/var/log/void-maintenance.log"
 

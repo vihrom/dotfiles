@@ -10,6 +10,7 @@ sleep 0.2
 xkb-switch -W | while read -r _; do kill -45 $(pidof dwmblocks); done &
 
 xset s 600 600 &
+xset dpms 0 0 900 &
 xss-lock --transfer-sleep-lock -- slock &
 
 xwallpaper --stretch ~/pics/wallpapers/wallpaper.jpg &

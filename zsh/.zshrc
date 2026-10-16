@@ -8,18 +8,6 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 setopt INC_APPEND_HISTORY
 
-# Dirs
-setopt AUTO_PUSHD
-setopt PUSHD_IGNORE_DUPS
-
-dj() { # Jump to dirs
-    cd "+$1"
-}
-
-# z
-export _Z_DATA="$HOME/.local/share/z/z_history"
-. ~/.local/share/z/z.sh
-
 # Options
 setopt autocd
 setopt CORRECT

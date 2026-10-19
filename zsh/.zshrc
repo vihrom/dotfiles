@@ -39,8 +39,44 @@ autoload -Uz compinit && compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Fzf
-. ~/.local/share/fzf_init.zsh
+# Fzy integration
+fzy-file-widget() {
+    local selected
+    selected=$(find . -type f -not -path '*/.git/*' 2>/dev/null | fzy)
+    if [[ -n $selected ]]; then
+        LBUFFER+=${(q)selected}
+    fi
+    zle redisplay
+}
+zle -N fzy-file-widget
+bindkey '^T' fzy-file-widget
+
+fzy-history-widget() {
+    local selected
+    selected=$(fc -rl 1 \
+        | sed -E 's/^[[:space:]]*[0-9]+[[:space:]]+//' \
+        | sed 's/\\n/ /g' \
+        | awk '!seen[$0]++' \
+        | fzy)
+    if [[ -n $selected ]]; then
+        BUFFER=$selected
+        CURSOR=${#BUFFER}
+    fi
+    zle redisplay
+}
+zle -N fzy-history-widget
+bindkey '^R' fzy-history-widget
+
+fzy-cd-widget() {
+    local selected
+    selected=$(find . -type d -not -path '*/.git*' 2>/dev/null | fzy)
+    if [[ -n $selected ]]; then
+        cd -- "$selected" || return
+    fi
+    zle redisplay
+}
+zle -N fzy-cd-widget
+bindkey '\ec' fzy-cd-widget
 
 # Prompt
 eval "$(weakline init zsh)"

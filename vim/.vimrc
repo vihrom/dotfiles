@@ -3,6 +3,7 @@ vim9script
 # General
 g:mapleader = " "
 syntax on
+filetype plugin indent on
 set number
   \ relativenumber
   \ clipboard=unnamedplus
@@ -25,7 +26,7 @@ endif
 set undofile undodir=~/.vim/undo
 
 # Plugins
-vim9cmd plug#begin()
+plug#begin()
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -34,15 +35,13 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-sleuth'
 Plug 'junegunn/vim-easy-align'
 Plug 'powerman/vim-plugin-ruscmd'
-Plug 'altercation/vim-colors-solarized'
-vim9cmd plug#end()
+plug#end()
 
 packadd! editorconfig
 
-# True Color Support & Colorscheme
+# True Color Support
 set termguicolors
 set background=light
-colorscheme solarized
 
 # Easy-align
 xmap ga <Plug>(EasyAlign)
